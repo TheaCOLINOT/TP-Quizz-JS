@@ -1,8 +1,8 @@
-// Variables globales pour suivre le score et la question en cours
+// variables globales pour suivre le score et la question en cours
 let score = 0;
 let questionIndex = 0;
 
-// Liste des questions (la 1re réponse est toujours la bonne)
+// liste des questions (la 1re réponse est toujours la bonne)
 const QUESTIONS = [
     {
         question: "Quel est le plus grand océan du monde ?",
@@ -30,19 +30,18 @@ const QUESTIONS = [
     }
 ];
 
-// Démarrer le quiz
+// demarrer le quiz
 function start() {
     document.getElementById("accueil").hidden = true;
     document.getElementById("quizz").hidden = false;
     afficherQuestion(questionIndex);
 }
 
-// Mélanger un tableau (utile pour les réponses)
+// melange tableau
 function melangerTableau(tableau) {
     return tableau.sort(() => Math.random() - 0.5);
 }
 
-// Préparer la question courante
 function preparerQuestion(questionObj) {
     let reponses = Object.values(questionObj.response);
     let bonneReponse = reponses[0];
@@ -55,7 +54,7 @@ function preparerQuestion(questionObj) {
     };
 }
 
-// Vérifier si la réponse choisie est correcte
+// verifie si réponse bonne
 function verifier(reponseChoisie) {
     let question = preparerQuestion(QUESTIONS[questionIndex]);
     if (reponseChoisie === question.bonne) {
@@ -65,7 +64,7 @@ function verifier(reponseChoisie) {
     afficherQuestion(questionIndex);
 }
 
-// Afficher la question suivante ou le résultat
+// afficher la question suivante ou le résultat
 function afficherQuestion(index) {
     mettreAJourProgression(index);
 
@@ -94,11 +93,10 @@ function afficherQuestion(index) {
         quizzDiv.appendChild(bouton);
     });
 
-    // Créer une div pour les boutons de navigation
     let navDiv = document.createElement("div");
     navDiv.className = "mt-4";
 
-    // Bouton Retour
+    // Bouton retour
     let btnRetour = document.createElement("button");
     btnRetour.innerText = "⬅ Retour";
     btnRetour.className = "btn btn-secondary me-2";
@@ -106,7 +104,7 @@ function afficherQuestion(index) {
     btnRetour.disabled = questionIndex === 0;
     navDiv.appendChild(btnRetour);
 
-    // Bouton Suivant
+    // Bouton suivant
     let btnSuivant = document.createElement("button");
     btnSuivant.innerText = "Suivant ➡";
     btnSuivant.className = "btn btn-primary";
@@ -116,7 +114,7 @@ function afficherQuestion(index) {
     quizzDiv.appendChild(navDiv);
 }
 
-// Affichage des resultats
+// affiche resultat
 function resultats(){
     const quizzDiv = document.getElementById("quizz");
     const resultatDiv = document.getElementById("resultat");
@@ -127,7 +125,7 @@ function resultats(){
     scoreDiv.innerHTML = `Votre score : <strong>${score}</strong> sur <strong>${QUESTIONS.length}</strong>`;
 }
 
-// Réinitialiser le quiz
+// réinitialiser quiz
 function rejouer() {
     score = 0;
     questionIndex = 0;
@@ -137,7 +135,7 @@ function rejouer() {
     afficherQuestion(questionIndex);
 }
 
-// Naviguer vers la question précédente
+// naviguer vers question précédente
 function questionPrecedente() {
     if (questionIndex > 0) {
         questionIndex--;
@@ -145,7 +143,7 @@ function questionPrecedente() {
     }
 }
 
-// Naviguer vers la question suivante sans vérifier la réponse
+// naviguer vers question suivante
 function questionSuivante() {
     if (questionIndex < QUESTIONS.length - 1) {
         questionIndex++;
@@ -155,7 +153,7 @@ function questionSuivante() {
     }
 }
 
-// Mettre à jour la barre de progression
+// mettre à jour barre progression
 function mettreAJourProgression(index) {
     const barre = document.getElementById("barreProgression");
     const container = document.getElementById("barreProgressionContainer");
@@ -166,7 +164,7 @@ function mettreAJourProgression(index) {
     barre.innerText = `${pourcentage}%`;
     container.hidden = false;
 
-    // Changement de couleur dynamique
+    // couleurs change
     barre.classList.remove("bg-success", "bg-warning", "bg-danger");
     if (pourcentage < 40) {
         barre.classList.add("bg-danger");
