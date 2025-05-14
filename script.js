@@ -67,76 +67,8 @@ function verifier(reponseChoisie) {
 
 // Afficher la question suivante ou le résultat
 function afficherQuestion(index) {
-    const quizzDiv = document.getElementById("quizz");
-    quizzDiv.innerHTML = "";
+    mettreAJourProgression(index);
 
-    // Si toutes les questions ont été posées
-    if (index >= QUESTIONS.length) {
-        resultats();
-        return;
-    }
-
-    // Préparer la question
-    let questionActuelle = preparerQuestion(QUESTIONS[index]);
-
-    // Afficher le texte de la question
-    let questionTitre = document.createElement("h3");
-    questionTitre.className = "mt-4";
-    questionTitre.innerText = questionActuelle.texte;
-    quizzDiv.appendChild(questionTitre);
-
-    // Créer les boutons de réponse
-    questionActuelle.propositions.forEach(function(reponse) {
-        let bouton = document.createElement("button");
-        bouton.className = "btn btn-outline-primary m-2 d-block";
-        bouton.innerText = reponse;
-        bouton.onclick = function() {
-            verifier(reponse);
-        };
-        quizzDiv.appendChild(bouton);
-    });
-}
-
-// Affichage des resultats
-function resultats(){
-    const quizzDiv = document.getElementById("quizz");
-    const resultatDiv = document.getElementById("resultat");
-    const scoreDiv = document.getElementById("score");
-
-    quizzDiv.hidden = true;
-    resultatDiv.hidden = false;
-    scoreDiv.innerHTML = `Votre score : <strong>${score}</strong> sur <strong>${QUESTIONS.length}</strong>`;
-}
-
-// Réinitialiser le quiz
-function rejouer() {
-    score = 0;
-    questionIndex = 0;
-    document.getElementById("resultat").hidden = true;
-    document.getElementById("quizz").hidden = false;
-    afficherQuestion(questionIndex);
-}
-
-// Naviguer vers la question précédente
-function questionPrecedente() {
-    if (questionIndex > 0) {
-        questionIndex--;
-        afficherQuestion(questionIndex);
-    }
-}
-
-// Naviguer vers la question suivante sans vérifier la réponse
-function questionSuivante() {
-    if (questionIndex < QUESTIONS.length - 1) {
-        questionIndex++;
-        afficherQuestion(questionIndex);
-    } else if (questionIndex === QUESTIONS.length - 1) {
-        resultats();
-    }
-}
-
-// MODIFIER afficherQuestion POUR AJOUTER LES BOUTONS DE NAVIGATION
-function afficherQuestion(index) {
     const quizzDiv = document.getElementById("quizz");
     quizzDiv.innerHTML = "";
 
@@ -181,6 +113,66 @@ function afficherQuestion(index) {
     btnSuivant.onclick = questionSuivante;
     navDiv.appendChild(btnSuivant);
 
-    
     quizzDiv.appendChild(navDiv);
+}
+
+// Affichage des resultats
+function resultats(){
+    const quizzDiv = document.getElementById("quizz");
+    const resultatDiv = document.getElementById("resultat");
+    const scoreDiv = document.getElementById("score");
+
+    quizzDiv.hidden = true;
+    resultatDiv.hidden = false;
+    scoreDiv.innerHTML = `Votre score : <strong>${score}</strong> sur <strong>${QUESTIONS.length}</strong>`;
+}
+
+// Réinitialiser le quiz
+function rejouer() {
+    score = 0;
+    questionIndex = 0;
+    document.getElementById("resultat").hidden = true;
+    document.getElementById("quizz").hidden = false;
+    mettreAJourProgression(0);
+    afficherQuestion(questionIndex);
+}
+
+// Naviguer vers la question précédente
+function questionPrecedente() {
+    if (questionIndex > 0) {
+        questionIndex--;
+        afficherQuestion(questionIndex);
+    }
+}
+
+// Naviguer vers la question suivante sans vérifier la réponse
+function questionSuivante() {
+    if (questionIndex < QUESTIONS.length - 1) {
+        questionIndex++;
+        afficherQuestion(questionIndex);
+    } else if (questionIndex === QUESTIONS.length - 1) {
+        resultats();
+    }
+}
+
+// Mettre à jour la barre de progression
+function mettreAJourProgression(index) {
+    const barre = document.getElementById("barreProgression");
+    const container = document.getElementById("barreProgressionContainer");
+
+    let pourcentage = Math.floor((index / QUESTIONS.length) * 100);
+    barre.style.width = `${pourcentage}%`;
+    barre.setAttribute("aria-valuenow", pourcentage);
+    barre.innerText = `${pourcentage}%`;
+    container.hidden = false;
+
+    // Changement de couleur dynamique
+    barre.classList.remove("bg-success", "bg-warning", "bg-danger");
+    if (pourcentage < 40) {
+        barre.classList.add("bg-danger");
+    } else if (pourcentage < 80) {
+        barre.classList.add("bg-warning");
+    } else {
+        barre.classList.add("bg-success");
+    }
 }
